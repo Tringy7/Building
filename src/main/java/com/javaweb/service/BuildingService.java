@@ -11,6 +11,4 @@ public interface BuildingService {
     List<BuildingSearchResponse> searchBuilding(BuildingSearchRequest buildingSearchRequest);
 
     BuildingDTO findBuildingById(Long buildingId);
-
-    Map<Long, String> getAllStaff();
 }

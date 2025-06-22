@@ -27,7 +27,6 @@ public class BuildingController {
         mav.addObject("modelSearch", buildingSearchRequest);
         List<BuildingSearchResponse> buildingSearchResponseList = buildingService.searchBuilding(buildingSearchRequest);
         mav.addObject("buildingList", buildingSearchResponseList);
-//        mav.addObject("staffList", buildingService.getAllStaff())1
         return mav;
     }
 

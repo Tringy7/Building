@@ -45,14 +45,4 @@ public class BuildingServiceImpl implements BuildingService {
         BuildingDTO buildingDTO = builidingConverter.convertToBuildingDTO(buildingEntity);
         return buildingDTO;
     }
-
-    @Override
-    public Map<Long, String> getAllStaff() {
-        Map<Long, String> staffList = new HashMap<>();
-        List<UserEntity> getStaff = userRepository.findByStatusAndRoles_Code(1, "STAFF");
-        for (UserEntity userEntity : getStaff) {
-            staffList.put(userEntity.getId(), userEntity.getFullName());
-        }
-        return staffList;
-    }
 }
