@@ -1,8 +1,5 @@
 package com.javaweb.entity;
 
-import org.apache.el.lang.EvaluationContext;
-import org.springframework.web.servlet.tags.EvalTag;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -40,13 +37,16 @@ public class BuildingEntity {
     @Column(name = "managerphone")
     private String managerphone;
 
+    @Column(name = "type")
+    private String typeCode;
+
     @OneToMany(mappedBy = "buildingEntity")
-    private List<rentAreaEntity> rentAreaEntities;
+    private List<RentAreaEntity> rentAreaEntities;
 
     public BuildingEntity() {
     }
 
-    public BuildingEntity(Long id, String name, String street, String ward, String district, Long numberofbasement, Long floorarea, Long rentprice, String managername, String managerphone, List<rentAreaEntity> rentAreaEntities) {
+    public BuildingEntity(Long id, String name, String street, String ward, String district, Long numberofbasement, Long floorarea, Long rentprice, String managername, String managerphone, String typeCode, List<RentAreaEntity> rentAreaEntities) {
         this.id = id;
         this.name = name;
         this.street = street;
@@ -57,7 +57,16 @@ public class BuildingEntity {
         this.rentprice = rentprice;
         this.managername = managername;
         this.managerphone = managerphone;
+        this.typeCode = typeCode;
         this.rentAreaEntities = rentAreaEntities;
+    }
+
+    public String getTypeCode() {
+        return typeCode;
+    }
+
+    public void setTypeCode(String typeCode) {
+        this.typeCode = typeCode;
     }
 
     public Long getId() {
@@ -140,11 +149,11 @@ public class BuildingEntity {
         this.managerphone = managerphone;
     }
 
-    public List<rentAreaEntity> getRentAreaEntities() {
+    public List<RentAreaEntity> getRentAreaEntities() {
         return rentAreaEntities;
     }
 
-    public void setRentAreaEntities(List<rentAreaEntity> rentAreaEntities) {
+    public void setRentAreaEntities(List<RentAreaEntity> rentAreaEntities) {
         this.rentAreaEntities = rentAreaEntities;
     }
 }

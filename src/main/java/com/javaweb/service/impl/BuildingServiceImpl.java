@@ -1,13 +1,10 @@
 package com.javaweb.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.javaweb.converter.BuilidingConverter;
 import com.javaweb.entity.BuildingEntity;
-import com.javaweb.entity.UserEntity;
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
@@ -44,5 +41,18 @@ public class BuildingServiceImpl implements BuildingService {
         BuildingEntity buildingEntity = buildingRepository.findById(buildingId).orElse(null);
         BuildingDTO buildingDTO = builidingConverter.convertToBuildingDTO(buildingEntity);
         return buildingDTO;
+    }
+
+    @Override
+    public void addBuilding(BuildingDTO buildingDTO){
+        BuildingEntity buildingEntity =  builidingConverter.convertToBuildingEntity(buildingDTO);
+        buildingRepository.save(buildingEntity);
+    }
+
+    @Override
+    public void deleteBuilding(List<Long> buildingId) {
+        for( Long id : buildingId) {
+            buildingRepository.deleteById(id);
+        }
     }
 }

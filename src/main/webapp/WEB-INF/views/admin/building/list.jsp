@@ -88,10 +88,7 @@
                                                         <label>Quận hiện có</label>
                                                         <form:select path="district" id="district" class="form-control">
                                                             <form:option value="">--Quận hiện có--</form:option>
-                                                            <form:option value="1">Quận 1</form:option>
-                                                            <form:option value="2">Quận 2</form:option>
-                                                            <form:option value="3">Quận 3</form:option>
-                                                            <form:option value="4">Quận 4</form:option>
+                                                            <form:options items="${districtType}"/>
                                                         </form:select>
                                                     </div>
                                                     <div class="col-xs-5">
@@ -135,10 +132,10 @@
                                                     </div>
                                                     <div class="col-xs-4">
                                                         <label>Chọn nhân viên phụ trách</label>
-                                                        <form:select path="staff" name="staff" id="staff"
+                                                        <form:select path="staffId" name="staff" id="staff"
                                                                      class="form-control">
                                                             <form:option value="">--Nhân viên hiện có--</form:option>
-<%--                                                            <form:options items="${staffList}"/>--%>
+                                                            <form:options items="${staffList}"/>
                                                         </form:select>
                                                     </div>
                                                 </div>
@@ -166,17 +163,8 @@
                                                 </div>
                                                 <div class="col-xs-12">
                                                     <div class="col-xs-6">
-                                                        <label class="checkbox-inline">
-                                                            <form:checkbox path="typeCode" value="NOI_THAT"/>Nội
-                                                            thất
-                                                        </label>
-                                                        <label class="checkbox-inline">
-                                                            <form:checkbox path="typeCode" value="NGUYEN_CAN"/>Nguyên
-                                                            căn
-                                                        </label>
-                                                        <label class="checkbox-inline">
-                                                            <form:checkbox path="typeCode" value="TANG_TRET"/>Tầng
-                                                            trệt
+                                                        <label class="inline">
+                                                            <form:checkboxes path="typeCode" items="${typeCode}"/>
                                                         </label>
                                                     </div>
                                                 </div>
@@ -188,8 +176,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div>
                                 </form:form>
 
@@ -212,7 +198,7 @@
                             </button>
                         </a>
 
-                        <button class="btn btn-danger">
+                        <button class="btn btn-danger" title="Xoá tòa nhà" id="btnEraseBuilings">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-building-dash" viewBox="0 0 16 16">
                                 <path
@@ -229,7 +215,7 @@
 
             <div class="row" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
                 <div class="col-xs-12">
-                    <table id="simple-table" style="margin: 3em 0 1.5em;"
+                    <table id="buildingList" style="margin: 3em 0 1.5em;"
                            class="table table-striped table-bordered table-hover">
                         <thead>
                         <tr>
@@ -279,7 +265,7 @@
                                             <i class="ace-icon fa fa-pencil bigger-120"></i>
                                         </button>
 
-                                        <button class="btn btn-xs btn-danger" title="Xóa tòa nhà">
+                                        <button class="btn btn-xs btn-danger" title="Xóa tòa nhà" onclick="deleteBuilding(${item.id})">
                                             <i class="ace-icon fa fa-trash-o bigger-120"></i>
                                         </button>
                                     </div>
@@ -460,6 +446,36 @@
         data['staffid'] = staffid;
         console.log("OK");
     })
+
+    function deleteBuilding(id) {
+        var buildingId = id;
+        deleteBuildingById(buildingId);
+    }
+
+    $('#btnEraseBuilings').click(function (e) {
+        e.preventDefault();
+        var buildingIds = $('#buildingList').find('tbody input[type=checkbox]:checked').map(function () {
+            return $(this).val();
+        }).get();
+        deleteBuildingById(buildingIds);
+    })
+
+    function deleteBuildingById(ids){
+        $.ajax({
+            type: "DELETE",
+            url: "/admin/building/" + ids,
+            data: JSON.stringify(ids),
+            contentType: "application/json",
+            dataType: "JSON",
+
+            success: function (respond) {
+                console.log("Success");
+            },
+            error: function (respond) {
+                console.log("Error");
+            },
+        })
+    }
 </script>
 </body>
 </html>

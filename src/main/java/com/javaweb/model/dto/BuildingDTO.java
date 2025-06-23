@@ -9,6 +9,7 @@ public class BuildingDTO extends AbstractDTO {
     private String name;
     private String street;
     private String ward;
+    private String district;
     private String address;
     private Long numberOfBasement;
     private Long floorArea;
@@ -22,11 +23,12 @@ public class BuildingDTO extends AbstractDTO {
     public BuildingDTO() {
     }
 
-    public BuildingDTO(Long id, String name, String street, String ward, String address, Long numberOfBasement, Long floorArea, List<String> typeCode, String managerName, String managerPhone, Long rentPrice, String rentArea) {
+    public BuildingDTO(Long id, String name, String street, String ward, String district, String address, Long numberOfBasement, Long floorArea, List<String> typeCode, String managerName, String managerPhone, Long rentPrice, String rentArea) {
         this.id = id;
         this.name = name;
         this.street = street;
         this.ward = ward;
+        this.district = district;
         this.address = address;
         this.numberOfBasement = numberOfBasement;
         this.floorArea = floorArea;
@@ -45,6 +47,14 @@ public class BuildingDTO extends AbstractDTO {
     @Override
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
     }
 
     public String getName() {

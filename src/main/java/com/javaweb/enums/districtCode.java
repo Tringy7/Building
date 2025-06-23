@@ -2,6 +2,7 @@ package com.javaweb.enums;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public enum  districtCode {
     QUAN_1 ("Quận 1"),
@@ -13,21 +14,16 @@ public enum  districtCode {
     QUAN_7 ("Quận 7"),
     QUAN_8 ("Quận 8"),
     ;
-
     private final String districtName;
     districtCode(String districtName) {
         this.districtName = districtName;
     }
 
-    public String getDistrictName() {
-        return districtName;
-    }
-
-    public static Map<String,String> type(){
-        Map<String,String> listType = new HashMap<>();
-        for(districtCode item : districtCode.values()){
-            listType.put(item.toString() , item.districtName);
+    public static Map<String, String> getDistrictCode() {
+        Map<String, String> res = new TreeMap<>();
+        for (districtCode it : districtCode.values()) {
+            res.put(it.toString(), it.districtName);
         }
-        return listType;
+        return res;
     }
 }

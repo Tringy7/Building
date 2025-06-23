@@ -19,10 +19,10 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
     private EntityManager entityManager;
 
     public void joinTable(BuildingSearchRequest buildingSearchRequest, StringBuilder sql) {
-        String staff = buildingSearchRequest.getStaff();
-        if (staff != null && !staff.equals("")) {
-            sql.append(" INNER JOIN assignmentcustomer ON assignmentcustomer.buildingid = b.id");
-            sql.append(" INNER JOIN user ON user.id = assignmentcustomer.staffid");
+        Long staff = buildingSearchRequest.getStaffId();
+        if (staff != null) {
+            sql.append(" INNER JOIN assignmentbuilding ON assignmentbuilding.buildingid = b.id");
+            sql.append(" INNER JOIN user ON user.id = assignmentbuilding.staffid");
         }
 
     }
@@ -63,9 +63,9 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
             sql.append(")");
         }
 
-        String staff = buildingSearchRequest.getStaff();
-        if (staff != null && !staff.equals("")) {
-            sql.append(" AND user.fullname LIKE '%" + staff + "%'");
+        Long staffId = buildingSearchRequest.getStaffId();
+        if (staffId != null) {
+            sql.append(" AND user.id = " + staffId);
         }
 
         Long valueFrom = buildingSearchRequest.getAreaFrom();
@@ -95,7 +95,7 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
 
     @Override
     public List<BuildingEntity> searchBuilding(BuildingSearchRequest buildingSearchRequest) {
-        StringBuilder sql = new StringBuilder("SELECT b.id, b.name, b.street, b.ward, b.district, b.numberofbasement, b.floorarea, b.rentprice, b.managername, b.managerphone");
+        StringBuilder sql = new StringBuilder("SELECT b.id, b.name, b.street, b.ward, b.district, b.numberofbasement, b.floorarea, b.rentprice, b.managername, b.managerphone, b.type");
         sql.append(" FROM building b");
         joinTable(buildingSearchRequest, sql);
         sql.append(" WHERE 1=1");

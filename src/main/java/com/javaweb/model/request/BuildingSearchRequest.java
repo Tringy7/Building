@@ -21,12 +21,12 @@ public class BuildingSearchRequest extends AbstractDTO {
     private Long rentPriceTo;
     private Long areaFrom;
     private Long areaTo;
-    private String staff;
+    private Long staffId;
 
     public BuildingSearchRequest() {
     }
 
-    public BuildingSearchRequest(Long id, String name, String street, String ward, String district, Long numberOfBasement, Long floorArea, String level, String direction, List<String> typeCode, String managerName, String managerPhone, Long rentPriceFrom, Long rentPriceTo, Long areaFrom, Long areaTo, String staff) {
+    public BuildingSearchRequest(Long id, String name, String street, String ward, String district, Long numberOfBasement, Long floorArea, String level, String direction, List<String> typeCode, String managerName, String managerPhone, Long rentPriceFrom, Long rentPriceTo, Long areaFrom, Long areaTo, Long staffId) {
         this.id = id;
         this.name = name;
         this.street = street;
@@ -43,7 +43,7 @@ public class BuildingSearchRequest extends AbstractDTO {
         this.rentPriceTo = rentPriceTo;
         this.areaFrom = areaFrom;
         this.areaTo = areaTo;
-        this.staff = staff;
+        this.staffId = staffId;
     }
 
     @Override
@@ -176,11 +176,11 @@ public class BuildingSearchRequest extends AbstractDTO {
         this.areaTo = areaTo;
     }
 
-    public String getStaff() {
-        return staff;
+    public Long getStaffId() {
+        return staffId;
     }
 
-    public void setStaff(String staff) {
-        this.staff = staff;
+    public void setStaffId(Long staff) {
+        this.staffId = staff;
     }
 }

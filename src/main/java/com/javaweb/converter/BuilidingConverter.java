@@ -1,15 +1,16 @@
 package com.javaweb.converter;
 
-import com.javaweb.config.ModelMapperConfig;
 import com.javaweb.entity.BuildingEntity;
-import com.javaweb.entity.rentAreaEntity;
+import com.javaweb.entity.RentAreaEntity;
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.response.BuildingSearchResponse;
+import com.javaweb.service.BuildingService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Column;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +23,7 @@ public class BuilidingConverter {
     public BuildingSearchResponse convertToBuildingReponse(BuildingEntity buildingEntity) {
         BuildingSearchResponse buildingSearchResponse = modelMapper.map(buildingEntity, BuildingSearchResponse.class);
         buildingSearchResponse.setAddress(buildingEntity.getStreet() + ", " + buildingEntity.getWard() + ", " + buildingEntity.getDistrict());
-        List<rentAreaEntity> value = buildingEntity.getRentAreaEntities();
+        List<RentAreaEntity> value = buildingEntity.getRentAreaEntities();
         String temp = value.stream().map(v -> v.getValue()).collect(Collectors.joining(","));
         buildingSearchResponse.setRentArea(temp);
         return buildingSearchResponse;
@@ -31,9 +32,31 @@ public class BuilidingConverter {
     public BuildingDTO convertToBuildingDTO(BuildingEntity buildingEntity) {
         BuildingDTO buildingDTO = modelMapper.map(buildingEntity, BuildingDTO.class);
         buildingDTO.setAddress(buildingEntity.getStreet() + ", " + buildingEntity.getWard() + ", " + buildingEntity.getDistrict());
-        List<rentAreaEntity> value = buildingEntity.getRentAreaEntities();
+        List<RentAreaEntity> value = buildingEntity.getRentAreaEntities();
         String temp = value.stream().map(v -> v.getValue()).collect(Collectors.joining(","));
         buildingDTO.setRentArea(temp);
         return buildingDTO;
+    }
+
+    public BuildingEntity convertToBuildingEntity(BuildingDTO buildingDTO) {
+        BuildingEntity buildingEntity = modelMapper.map(buildingDTO, BuildingEntity.class);
+
+        List<String> temp = buildingDTO.getTypeCode();
+        String typeCode = temp.stream().collect(Collectors.joining(","));
+        buildingEntity.setTypeCode(typeCode);
+
+        List<RentAreaEntity> rentAreaEntityList = new ArrayList<>();
+        String valueRentArea = buildingDTO.getRentArea();
+        List<String> rentAreaList = Arrays.stream(valueRentArea.split(","))
+                .map(String::trim)
+                .collect(Collectors.toList());
+        for (String rentArea : rentAreaList) {
+            RentAreaEntity rentAreaEntity = new RentAreaEntity();
+            rentAreaEntity.setValue(rentArea);
+//            rentAreaEntity.setBuildingEntity(buildingEntity);
+            rentAreaEntityList.add(rentAreaEntity);
+        }
+        buildingEntity.setRentAreaEntities(rentAreaEntityList);
+        return buildingEntity;
     }
 }
