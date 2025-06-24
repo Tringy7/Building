@@ -415,30 +415,30 @@
         sendBuilding(buidlingId);
     }
 
-        function sendBuilding(buidlingId) {
-            $.ajax({
-                type: "GET",
-                url: "/admin/building/" + buidlingId + "/staff",
-                dataType: "JSON",
+    function sendBuilding(buidlingId) {
+        $.ajax({
+            type: "GET",
+            url: "/admin/building/" + buidlingId + "/staff",
+            dataType: "JSON",
 
-                success: function (response) {
-                    var row = '';
-                    $.each(response.data, function(index, value){
-                        row += '<tr>';
-                        row += '<td class="text-center"><input type="checkbox" value=' + value.staffid + 'id="checkbox_' + value.staffid + value.checked + '/></td>';
-                        row += '<td>' + value.fullName + '</td>';
-                        row += '/<tr>';
-                    });
-                    $("#stafflist tbody").html(row);
-                    console.log("Success");
-                },
-                error: function (response) {
-                    console.log("Failed");
-                    window.location.href = "/admin/building-list?message=error";
-                    console.log(response);
-                },
-            })
-        }
+            success: function (response) {
+                var row = '';
+                $.each(response.data, function (index, value) {
+                    row += '<tr>';
+                    row += '<td class="text-center"><input type="checkbox" value="' + value.staffid + '" id="checkbox_' + value.staffid + '"' + value.checked + '></td>';
+                    row += '<td>' + value.fullName + '</td>';
+                    row += '/<tr>';
+                });
+                $("#stafflist tbody").html(row);
+                console.log("Success");
+            },
+            error: function (response) {
+                console.log("Failed");
+                window.location.href = "/admin/building-list?message=error";
+                console.log(response);
+            },
+        })
+    }
 
 
     $('#searchBuildng').click(function (e) {
