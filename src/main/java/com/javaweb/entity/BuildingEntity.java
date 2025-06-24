@@ -1,5 +1,7 @@
 package com.javaweb.entity;
 
+import com.javaweb.model.response.StaffResponseDTO;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -43,6 +45,14 @@ public class BuildingEntity {
     @OneToMany(mappedBy = "buildingEntity")
     private List<RentAreaEntity> rentAreaEntities;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "assignmentbuilding",
+            joinColumns = @JoinColumn(name = "buildingid", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "staffid", nullable = false)
+    )
+    private List<UserEntity> userEntities;
+
     public BuildingEntity() {
     }
 
@@ -59,6 +69,14 @@ public class BuildingEntity {
         this.managerphone = managerphone;
         this.typeCode = typeCode;
         this.rentAreaEntities = rentAreaEntities;
+    }
+
+    public List<UserEntity> getUserEntities() {
+        return userEntities;
+    }
+
+    public void setUserEntities(List<UserEntity> userEntities) {
+        this.userEntities = userEntities;
     }
 
     public String getTypeCode() {

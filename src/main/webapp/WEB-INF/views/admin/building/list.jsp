@@ -265,7 +265,8 @@
                                             <i class="ace-icon fa fa-pencil bigger-120"></i>
                                         </button>
 
-                                        <button class="btn btn-xs btn-danger" title="Xóa tòa nhà" onclick="deleteBuilding(${item.id})">
+                                        <button class="btn btn-xs btn-danger" title="Xóa tòa nhà"
+                                                onclick="deleteBuilding(${item.id})">
                                             <i class="ace-icon fa fa-trash-o bigger-120"></i>
                                         </button>
                                     </div>
@@ -342,24 +343,6 @@
                             </thead>
 
                             <tbody>
-                            <tr>
-                                <td class="center">
-                                    <label class="pos-rel">
-                                        <input type="checkbox" class="ace" value="1">
-                                        <span class="lbl"></span>
-                                    </label>
-                                </td>
-                                <td>Nguyễn Văn A</td>
-                            </tr>
-                            <tr>
-                                <td class="center">
-                                    <label class="pos-rel">
-                                        <input type="checkbox" class="ace" value="2">
-                                        <span class="lbl"></span>
-                                    </label>
-                                </td>
-                                <td>Nguyễn Văn B</td>
-                            </tr>
                             </tbody>
                         </table>
                         <input type="hidden" id="buildingId" name="buildingId" value="3487">
@@ -429,7 +412,34 @@
 <script>
     function assignmentBuilding(buidlingId) {
         $('#assignmentBuildingModal').modal();
+        sendBuilding(buidlingId);
     }
+
+        function sendBuilding(buidlingId) {
+            $.ajax({
+                type: "GET",
+                url: "/admin/building/" + buidlingId + "/staff",
+                dataType: "JSON",
+
+                success: function (response) {
+                    var row = '';
+                    $.each(response.data, function(index, value){
+                        row += '<tr>';
+                        row += '<td class="text-center"><input type="checkbox" value=' + value.staffid + 'id="checkbox_' + value.staffid + value.checked + '/></td>';
+                        row += '<td>' + value.fullName + '</td>';
+                        row += '/<tr>';
+                    });
+                    $("#stafflist tbody").html(row);
+                    console.log("Success");
+                },
+                error: function (response) {
+                    console.log("Failed");
+                    window.location.href = "/admin/building-list?message=error";
+                    console.log(response);
+                },
+            })
+        }
+
 
     $('#searchBuildng').click(function (e) {
         e.preventDefault();
@@ -460,7 +470,7 @@
         deleteBuildingById(buildingIds);
     })
 
-    function deleteBuildingById(ids){
+    function deleteBuildingById(ids) {
         $.ajax({
             type: "DELETE",
             url: "/admin/building/" + ids,

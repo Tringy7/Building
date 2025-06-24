@@ -5,9 +5,12 @@ import java.util.List;
 
 import com.javaweb.converter.BuilidingConverter;
 import com.javaweb.entity.BuildingEntity;
+import com.javaweb.entity.UserEntity;
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
+import com.javaweb.model.response.ResponseDTO;
+import com.javaweb.model.response.StaffResponseDTO;
 import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.UserRepository;
 import com.javaweb.service.BuildingService;
@@ -54,5 +57,34 @@ public class BuildingServiceImpl implements BuildingService {
         for( Long id : buildingId) {
             buildingRepository.deleteById(id);
         }
+    }
+
+    @Override
+    public ResponseDTO getStaff(Long buildingId) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<StaffResponseDTO> staffResponseDTOList = new ArrayList<>();
+
+        BuildingEntity buildingEntity = buildingRepository.findById(buildingId).get();
+        List<UserEntity> userEntityList = userRepository.findByStatusAndRoles_Code(1, "STAFF");
+        List<UserEntity> staffs = buildingEntity.getUserEntities();
+
+        for (UserEntity it : userEntityList) {
+            StaffResponseDTO staffResponseDTO = new StaffResponseDTO();
+            staffResponseDTO.setStaffId(it.getId());
+            staffResponseDTO.setFullName(it.getFullName());
+
+            if(staffs.contains(it)) {
+                staffResponseDTO.setChecked("checked");
+            }
+            else {
+                staffResponseDTO.setChecked("");
+            }
+
+            staffResponseDTOList.add(staffResponseDTO);
+        }
+
+        responseDTO.setData(staffResponseDTOList);
+        responseDTO.setMessage("success");
+        return responseDTO;
     }
 }
