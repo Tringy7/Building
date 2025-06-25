@@ -19,7 +19,6 @@ public class BuildingDTO extends AbstractDTO {
     private Long rentPrice;
     private String rentArea;
 
-
     public BuildingDTO() {
     }
 

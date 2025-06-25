@@ -154,13 +154,14 @@
     </div>
 </div>
 <script>
+    // Return URL /admin/building-lis
     $(document).ready(function () {
         $('#btnCancel').click(function () {
             window.location.href="/admin/building-list";
         });
     });
 
-
+    // Add or Update Building
     $('#btnAddOrUpdateBuilding').click(function () {
         var data = {};
         var typeCode = [];

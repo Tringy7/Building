@@ -5,7 +5,9 @@ import java.util.List;
 
 import com.javaweb.converter.BuilidingConverter;
 import com.javaweb.entity.BuildingEntity;
+import com.javaweb.entity.RentAreaEntity;
 import com.javaweb.entity.UserEntity;
+import com.javaweb.model.dto.AssignmentBuildingDTO;
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
@@ -87,4 +89,14 @@ public class BuildingServiceImpl implements BuildingService {
         responseDTO.setMessage("success");
         return responseDTO;
     }
+
+    @Override
+    public void updateAssignmentBuilding(AssignmentBuildingDTO assignmentBuildingDTO){
+        BuildingEntity buildingEntity = buildingRepository.findById(assignmentBuildingDTO.getBuildingId()).get();
+        List<UserEntity> userEntityList = userRepository.findAllById(assignmentBuildingDTO.getStaffs());
+        buildingEntity.getUserEntities().clear();
+        buildingEntity.setUserEntities(userEntityList);
+        buildingRepository.save(buildingEntity);
+    }
+
 }

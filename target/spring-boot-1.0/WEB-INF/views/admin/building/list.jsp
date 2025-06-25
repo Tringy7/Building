@@ -256,7 +256,7 @@
                                 <td>
                                     <div class="hidden-sm hidden-xs btn-group">
                                         <button class="btn btn-xs btn-success" title="Giao tòa nhà"
-                                                onclick="assignmentBuilding(${item.id})">
+                                                onclick="assignmentBuildingModal(${item.id})">
                                             <i class="ace-icon fa fa-check bigger-120"></i>
                                         </button>
 
@@ -341,7 +341,6 @@
                                 <th>Tên nhân viên</th>
                             </tr>
                             </thead>
-
                             <tbody>
                             </tbody>
                         </table>
@@ -350,8 +349,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                 <button type="button" class="btn btn-primary" id="btnassignmentBuilding">Giao tòa nhà</button>
+                <button type="button" class="btn btn-secondary" id="exitModal" data-bs-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
@@ -410,10 +409,17 @@
 <script src="assets/js/jquery.2.1.1.min.js"></script>
 
 <script>
-    function assignmentBuilding(buidlingId) {
+    // Build modal
+    function assignmentBuildingModal(buidlingId) {
         $('#assignmentBuildingModal').modal();
+        $('#buildingId').val(buidlingId);
         sendBuilding(buidlingId);
     }
+
+    $("#exitModal").click(function (e){
+        e.preventDefault();
+        $("#assignmentBuildingModal").modal('hide');
+    })
 
     function sendBuilding(buidlingId) {
         $.ajax({
@@ -425,9 +431,9 @@
                 var row = '';
                 $.each(response.data, function (index, value) {
                     row += '<tr>';
-                    row += '<td class="text-center"><input type="checkbox" value="' + value.staffid + '" id="checkbox_' + value.staffid + '"' + value.checked + '></td>';
+                    row += '<td class="text-center"><input type="checkbox" value="' + value.staffId + '" id="checkbox_' + value.staffId + '"' + value.checked + '></td>';
                     row += '<td>' + value.fullName + '</td>';
-                    row += '/<tr>';
+                    row += '</tr>';
                 });
                 $("#stafflist tbody").html(row);
                 console.log("Success");
@@ -440,23 +446,45 @@
         })
     }
 
+    $('#btnassignmentBuilding').click(function (e) {
+        e.preventDefault();
+        var data = {};
+        data['buildingId'] = $('#buildingId').val();
+        var staffs = $('#stafflist').find('tbody input[type=checkbox]:checked').map(function () {
+            return $(this).val();
+        }).get();
+        data['staffs'] = staffs;
+        if(data['staffs'] != ''){
+            assignmentBuilding(data);
+        }
+    })
 
+    function assignmentBuilding(data){
+        $.ajax({
+            type: "POST",
+            url: "/admin/building/assignmentBuilding",
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            dataType: "JSON",
+
+            success: function (response) {
+                console.log("Success");
+            },
+            error: function (response) {
+                console.log("Failed");
+                window.location.href = "/admin/building-list?message=error";
+                console.log(response);
+            },
+        })
+    }
+
+    // Submit param
     $('#searchBuildng').click(function (e) {
         e.preventDefault();
         $('#listform').submit();
     })
 
-    $('#btnassignmentBuilding').click(function (e) {
-        e.preventDefault();
-        var data = {};
-        data['buildingId'] = $('#buildingId').val();
-        var staffid = $('#stafflist').find('tbody input[type=checkbox]:checked').map(function () {
-            return $(this).val();
-        }).get();
-        data['staffid'] = staffid;
-        console.log("OK");
-    })
-
+    // Delete Building
     function deleteBuilding(id) {
         var buildingId = id;
         deleteBuildingById(buildingId);

@@ -20,6 +20,9 @@ public class BuilidingConverter {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private BuildingService buildingService;
+
     public BuildingSearchResponse convertToBuildingReponse(BuildingEntity buildingEntity) {
         BuildingSearchResponse buildingSearchResponse = modelMapper.map(buildingEntity, BuildingSearchResponse.class);
         buildingSearchResponse.setAddress(buildingEntity.getStreet() + ", " + buildingEntity.getWard() + ", " + buildingEntity.getDistrict());
@@ -35,6 +38,11 @@ public class BuilidingConverter {
         List<RentAreaEntity> value = buildingEntity.getRentAreaEntities();
         String temp = value.stream().map(v -> v.getValue()).collect(Collectors.joining(","));
         buildingDTO.setRentArea(temp);
+
+        String typeCode = buildingEntity.getTypeCode();
+        List<String> typeCodeList = Arrays.asList(typeCode.split(","));
+        buildingDTO.setTypeCode(typeCodeList);
+
         return buildingDTO;
     }
 
@@ -50,10 +58,12 @@ public class BuilidingConverter {
         List<String> rentAreaList = Arrays.stream(valueRentArea.split(","))
                 .map(String::trim)
                 .collect(Collectors.toList());
+        // Get value table RentArea
+//        List<RentAreaEntity> areaEntityList = buildingEntity.getRentAreaEntities();
+
         for (String rentArea : rentAreaList) {
             RentAreaEntity rentAreaEntity = new RentAreaEntity();
             rentAreaEntity.setValue(rentArea);
-//            rentAreaEntity.setBuildingEntity(buildingEntity);
             rentAreaEntityList.add(rentAreaEntity);
         }
         buildingEntity.setRentAreaEntities(rentAreaEntityList);
