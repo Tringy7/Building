@@ -18,6 +18,9 @@ import com.javaweb.repository.UserRepository;
 import com.javaweb.service.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class BuildingServiceImpl implements BuildingService {
@@ -49,16 +52,16 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public void addBuilding(BuildingDTO buildingDTO){
+    @Transactional
+    public void addOrUpdateBuilding(BuildingDTO buildingDTO){
         BuildingEntity buildingEntity =  builidingConverter.convertToBuildingEntity(buildingDTO);
         buildingRepository.save(buildingEntity);
     }
 
+    @Transactional
     @Override
     public void deleteBuilding(List<Long> buildingId) {
-        for( Long id : buildingId) {
-            buildingRepository.deleteById(id);
-        }
+        buildingRepository.deleteByIdIn(buildingId);
     }
 
     @Override
@@ -91,6 +94,7 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
+    @Transactional
     public void updateAssignmentBuilding(AssignmentBuildingDTO assignmentBuildingDTO){
         BuildingEntity buildingEntity = buildingRepository.findById(assignmentBuildingDTO.getBuildingId()).get();
         List<UserEntity> userEntityList = userRepository.findAllById(assignmentBuildingDTO.getStaffs());
@@ -99,4 +103,19 @@ public class BuildingServiceImpl implements BuildingService {
         buildingRepository.save(buildingEntity);
     }
 
+    @Override
+    public void uploadFile(MultipartFile file, Long buildingId){
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        BuildingEntity buildingEntity = new BuildingEntity();
+        buildingEntity.setImage(fileName);
+
+
+//        User savedUser = repo.save(user);
+//
+//        String uploadDir = "user-photos/" + savedUser.getId();
+//
+//        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+//
+//        return new RedirectView("/users", true);
+    }
 }

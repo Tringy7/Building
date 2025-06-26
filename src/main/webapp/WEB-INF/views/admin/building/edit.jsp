@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/common/taglib.jsp" %>
+<c:url var="Error" value="/admin/building-edit?message=error"/>
 <html>
 
 <head>
@@ -123,6 +124,17 @@
                                             id="rentalarea"/>
                             </div>
                         </div>
+                        <!-- FORM AJAX Upload Ảnh Riêng -->
+                        <div class="form-group">
+                            <label class="col-xs-3">Ảnh</label>
+                            <div class="col-xs-9">
+                                <input type="file" id="imageFile" name="file" accept="image/*"/>
+                                <button type="button" id="uploadBtn">Tải lên</button>
+                                <img id="previewImage" src="" style="max-width: 200px; margin-top: 10px;"/>
+                                <form:input path="image" type="hidden" id="imagePath"/>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-xs-3">Loại tòa nhà</label>
                             <div class="col-xs-9">
@@ -157,12 +169,13 @@
     // Return URL /admin/building-lis
     $(document).ready(function () {
         $('#btnCancel').click(function () {
-            window.location.href="/admin/building-list";
+            window.location.href = "/admin/building-list";
         });
     });
 
     // Add or Update Building
-    $('#btnAddOrUpdateBuilding').click(function () {
+    $('#btnAddOrUpdateBuilding').click(function (e) {
+        e.preventDefault();
         var data = {};
         var typeCode = [];
         var formData = $('#form-edit').serializeArray();
@@ -174,24 +187,53 @@
             }
         });
         data['typeCode'] = typeCode;
-        console.log("OK");
         // call api
-        $.ajax({
-            type: "POST",
-            url: "/admin/building",
-            data: JSON.stringify(data),
-            contentType: "application/json",
-            dataType: "JSON",
+        if (data['typeCode'] != '') {
+            $.ajax({
+                type: "POST",
+                url: "/admin/building",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: "JSON",
 
-            success: function (respond) {
-                console.log("Success");
-            },
-            error: function (respond) {
-                console.log("Error");
-            },
-        })
+                success: function (respond) {
+                    console.log("Success");
+                    window.location.href = "/admin/building-list";
+                },
+                error: function (respond) {
+                    console.log("Error");
+                },
+            })
+        } else {
+            window.location.href = "${Error}";
+        }
     })
 
+    $("#uploadBtn").click(function (e) {
+        e.preventDefault();
+
+        var formData = new FormData();
+        var file = $('#imageFile')[0].files[0];
+        var buildingId = $("#id").val();
+        formData.append("file", file);
+        formData.append("id", buildingId);
+
+        $.ajax({
+            url: "/admin/building/uploadFile",
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                alert("Upload thành công!");
+                // Giả sử response trả về đường dẫn ảnh
+                // $('#previewImage').attr('src', response.imageUrl);
+            },
+            error: function () {
+                alert("Lỗi khi upload ảnh");
+            }
+        });
+    })
 
 </script>
 </body>

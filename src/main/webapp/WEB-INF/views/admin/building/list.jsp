@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/common/taglib.jsp" %>
 <c:url var="buildingListURL" value="/admin/building-list"/>
+<c:url var="searchError" value="/admin/building-list?message=error"/>
 <html>
 <head>
     <title>Search</title>
@@ -416,7 +417,7 @@
         sendBuilding(buidlingId);
     }
 
-    $("#exitModal").click(function (e){
+    $("#exitModal").click(function (e) {
         e.preventDefault();
         $("#assignmentBuildingModal").modal('hide');
     })
@@ -440,8 +441,7 @@
             },
             error: function (response) {
                 console.log("Failed");
-                window.location.href = "/admin/building-list?message=error";
-                console.log(response);
+                window.location.href = "${searchError}";
             },
         })
     }
@@ -454,12 +454,12 @@
             return $(this).val();
         }).get();
         data['staffs'] = staffs;
-        if(data['staffs'] != ''){
+        if (data['staffs'] != '') {
             assignmentBuilding(data);
         }
     })
 
-    function assignmentBuilding(data){
+    function assignmentBuilding(data) {
         $.ajax({
             type: "POST",
             url: "/admin/building/assignmentBuilding",
@@ -472,8 +472,7 @@
             },
             error: function (response) {
                 console.log("Failed");
-                window.location.href = "/admin/building-list?message=error";
-                console.log(response);
+                window.location.href = "${searchError}";
             },
         })
     }
@@ -511,6 +510,7 @@
             },
             error: function (respond) {
                 console.log("Error");
+                window.location.href = "${searchError}";
             },
         })
     }

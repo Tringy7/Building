@@ -5,8 +5,9 @@ import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.response.ResponseDTO;
 import com.javaweb.service.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,8 +18,8 @@ public class BuildingAPI {
     private BuildingService buildingService;
 
     @PostMapping()
-    public void addAndUpdateBuilding(@RequestBody BuildingDTO buildingDTO) {
-        buildingService.addBuilding(buildingDTO);
+    public void addOrUpdateBuilding(@RequestBody BuildingDTO buildingDTO) {
+        buildingService.addOrUpdateBuilding(buildingDTO);
     }
 
     @DeleteMapping("/{ids}")
@@ -35,5 +36,11 @@ public class BuildingAPI {
     @PostMapping("/assignmentBuilding")
     public void updateAssignmentBuilding(@RequestBody AssignmentBuildingDTO assignmentBuildingDTO) {
         buildingService.updateAssignmentBuilding(assignmentBuildingDTO);
+    }
+
+    @PostMapping("/uploadFile")
+    public void uploadFile(@RequestParam("file") MultipartFile file,
+                           @RequestParam("id") Long buildingId) {
+        buildingService.uploadFile(file, buildingId);
     }
 }

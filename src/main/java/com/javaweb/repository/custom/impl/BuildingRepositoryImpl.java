@@ -95,7 +95,7 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
 
     @Override
     public List<BuildingEntity> searchBuilding(BuildingSearchRequest buildingSearchRequest) {
-        StringBuilder sql = new StringBuilder("SELECT b.id, b.name, b.street, b.ward, b.district, b.numberofbasement, b.floorarea, b.rentprice, b.managername, b.managerphone, b.type");
+        StringBuilder sql = new StringBuilder("SELECT b.id, b.name, b.street, b.ward, b.district, b.numberofbasement, b.floorarea, b.rentprice, b.managername, b.managerphone, b.type, b.image");
         sql.append(" FROM building b");
         joinTable(buildingSearchRequest, sql);
         sql.append(" WHERE 1=1");

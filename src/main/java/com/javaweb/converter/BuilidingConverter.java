@@ -49,24 +49,30 @@ public class BuilidingConverter {
     public BuildingEntity convertToBuildingEntity(BuildingDTO buildingDTO) {
         BuildingEntity buildingEntity = modelMapper.map(buildingDTO, BuildingEntity.class);
 
+        // Xử lý typeCode
         List<String> temp = buildingDTO.getTypeCode();
-        String typeCode = temp.stream().collect(Collectors.joining(","));
+        String typeCode = String.join(",", temp);
         buildingEntity.setTypeCode(typeCode);
 
+        // Xử lý rentArea
         List<RentAreaEntity> rentAreaEntityList = new ArrayList<>();
         String valueRentArea = buildingDTO.getRentArea();
         List<String> rentAreaList = Arrays.stream(valueRentArea.split(","))
                 .map(String::trim)
                 .collect(Collectors.toList());
-        // Get value table RentArea
-//        List<RentAreaEntity> areaEntityList = buildingEntity.getRentAreaEntities();
 
         for (String rentArea : rentAreaList) {
             RentAreaEntity rentAreaEntity = new RentAreaEntity();
             rentAreaEntity.setValue(rentArea);
+
+            // ✅ Liên kết ngược lại với buildingEntity
+            rentAreaEntity.setBuildingEntity(buildingEntity);
+
             rentAreaEntityList.add(rentAreaEntity);
         }
+
         buildingEntity.setRentAreaEntities(rentAreaEntityList);
         return buildingEntity;
     }
+
 }

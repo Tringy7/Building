@@ -18,6 +18,7 @@ public class BuildingDTO extends AbstractDTO {
     private String managerPhone;
     private Long rentPrice;
     private String rentArea;
+    private String image;
 
     public BuildingDTO() {
     }
@@ -36,6 +37,14 @@ public class BuildingDTO extends AbstractDTO {
         this.managerPhone = managerPhone;
         this.rentPrice = rentPrice;
         this.rentArea = rentArea;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override
